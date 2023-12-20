@@ -1,0 +1,22 @@
+- `pip3 install -r requirements.txt`
+- 
+    ```
+    python3 arp_spoof.py --help
+    ```
+    **Output**:
+    ```
+    usage: arp_spoof.py [-h] [-v] target host
+
+    ARP spoof script
+
+    positional arguments:
+    target         Victim IP Address to ARP poison
+    host           Host IP Address, the host you wish to intercept packets for
+                    (usually the gateway)
+
+    
+    ```
+    For instance, if you want to spoof **192.168.1.2** and the gateway is **192.168.1.1**:
+    ```
+    python3 arp_spoof 192.168.1.2 192.168.1.1 --verbose
+    ```

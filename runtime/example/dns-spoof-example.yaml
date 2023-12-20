@@ -1,0 +1,43 @@
+version: "3"
+networks:
+  dns-net:
+    driver: macvlan
+    driver_opts:
+      parent: enp1s0f0
+    ipam:
+      config:
+        - subnet: "192.168.12.243/24"
+          gateway: "192.168.12.1"
+services:
+  resolver:
+    container_name: dns-resolver
+    image: cyber-sec-docker
+    mac_address: 8a:ca:58:b9:e9:51
+    networks: 
+      dns-net:
+        ipv4_address: 192.168.12.60
+    volumes:
+      - /cyber-sec-boilerplate:/code
+    entrypoint: python3 /code/examples/DNS-Spoof/recursiveDNSserver.py -rServer 8.8.8.8 -local-ip 192.168.12.60
+  victim:
+    container_name: victim
+    image: cyber-sec-docker
+    mac_address: 8a:ca:58:b9:e9:52
+    networks: 
+      dns-net:
+        ipv4_address: 192.168.12.61
+    tty: true
+    stdin_open: true
+  attacker:
+    container_name: attacker
+    image: cyber-sec-docker
+    privileged: true
+    mac_address: 8a:ca:58:b9:e9:53
+    networks: 
+      dns-net:
+        ipv4_address: 192.168.12.62
+    tty: true
+    stdin_open: true
+    volumes:
+      - /cyber-sec-boilerplate:/code
+    entrypoint: /code/examples/DNS-Spoof/attack-target.sh
